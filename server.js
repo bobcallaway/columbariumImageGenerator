@@ -21,7 +21,7 @@ exports.handler = function (event, context, callback) {
 
 exports.generateImage = function(data, callback) {
 
-  var imageOutputFile = mktemp.createFile("XXXXX.html", function (err, path){
+  var imageOutputFile = mktemp.createFile("XXXXX.html", function (err, srcPath){
     if (err) 
       return callback(true, err);
     else {
@@ -29,36 +29,36 @@ exports.generateImage = function(data, callback) {
       - TODO: generate SVG from input JSON
       */
       // data
+
+      var childArgs = [path.join(__dirname, 'phantomjs-script.js')];
+      var phantom = childProcess.execFile(phantomJsPath, childArgs, { 
+        env: {
+          URL: srcPath
+        },
+        maxBuffer: 2048*1024
+      });
+    
+      var stdout = '';
+      var stderr = '';
+      
+      phantom.stdout.on('data', function(data) {
+        stdout += data;
+      });
+      
+      phantom.stderr.on('data', function(data) {
+        stderr += data;
+      });
+      
+      phantom.on('uncaughtException', function(err) {
+        console.log('uncaught exception: ' + err);
+      });
+      
+      phantom.on('exit', function(exitCode) {
+        if (exitCode !== 0) {
+          return callback(true, stderr);
+        }
+        callback(null, new Buffer(stdout).toString('base64'));
+      });
     }
   };
-
-  var childArgs = [path.join(__dirname, 'phantomjs-script.js')];
-  var phantom = childProcess.execFile(phantomJsPath, childArgs, { 
-    env: {
-      URL: 'cb.html' //TODO: change me
-    },
-    maxBuffer: 2048*1024
-  });
-
-  var stdout = '';
-  var stderr = '';
-
-  phantom.stdout.on('data', function(data) {
-    stdout += data;
-  });
-
-  phantom.stderr.on('data', function(data) {
-    stderr += data;
-  });
-
-  phantom.on('uncaughtException', function(err) {
-    console.log('uncaught exception: ' + err);
-  });
-
-  phantom.on('exit', function(exitCode) {
-    if (exitCode !== 0) {
-      return callback(true, stderr);
-    }
-    callback(null, new Buffer(stdout).toString('base64'));
-  });
 };
