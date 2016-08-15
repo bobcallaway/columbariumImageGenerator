@@ -10,7 +10,6 @@
   "dependencies": {
     "express": "^4.13.3",
     "body-parser": "^1.15.2",
-    "pug": "^2.0.0",
     "phantomjs-prebuilt": "^2.1.12"
   }
 }

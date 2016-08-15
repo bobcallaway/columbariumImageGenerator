@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<meta charset="utf-8">
+<style>
+
+.niche rect {
+  fill: #dedede;
+}
+
+.niche text {
+  fill: #575555;
+  font-family: Arial;
+  text-anchor: middle;
+}
+
+.niche--available rect {
+  fill: #9f4a6c;
+}
+
+.niche--available text {
+  font-family: "FontAwesome";
+  fill: white;
+}
+
+.niche--header rect {
+  fill: #ffffff;
+}
+
+.niche--header text {
+  fill: #575555;
+}
+</style>
+</head>
+<body>
+<svg id="wall1"></svg>
+<!--<svg id="wall1" width="400" height="350"></svg>-->
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+function getTextWidth(text, font) {
+  // if given, use cached canvas for better performance
+  // else, create new canvas
+  var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+  var context = canvas.getContext("2d");
+  context.font = font;
+  var metrics = context.measureText(text);
+  return metrics.width;
+};
+var testNiches = [
+{
+  name: "1x1",
+  available: false,
+  header: false,
+  wall: 1,
+  row: 1,
+  col: 1
+},
+{
+  name: "1x2",
+  available: true,
+  header: false,
+  wall: 1,
+  row: 1,
+  col: 2
+},
+{
+  name: "2x1",
+  available: true,
+  header: false,
+  wall: 1,
+  row: 2,
+  col: 1
+},
+{
+  name: "2x2",
+  available: false,
+  header: false,
+  wall: 1,
+  row: 2,
+  col: 2
+},
+{
+  name: "3x1",
+  available: true,
+  header: false,
+  wall: 1,
+  row: 3,
+  col: 1
+},
+{
+  name: "3x2",
+  available: false,
+  header: false,
+  wall: 1,
+  row: 3,
+  col: 2
+},
+{
+  name: "4x1",
+  available: false,
+  header: false,
+  wall: 1,
+  row: 1,
+  col: 3
+},
+{
+  name: "3x3",
+  available: true,
+  header: false,
+  wall: 1,
+  row: 3,
+  col: 3
+},
+];
+
+var svg = d3.select("#wall1");
+
+var gridWidth = d3.max(testNiches, function(d) { return d.col; }),
+    gridHeight = d3.max(testNiches, function(d) { return d.row; }),
+    cellSize = 45;
+
+var width = (gridWidth + 2)*cellSize;
+var height = (gridHeight + 4)*cellSize;
+svg.attr("width",width);
+svg.attr("height",height);
+
+for (var i = 0; i < gridHeight; i++){
+  testNiches.push({
+  name: 1 + i,
+  available: false,
+  header: true,
+  wall: 1,
+  row: i + 1,
+  col: 0
+});
+}
+for (var i = 0; i < gridWidth; i++){
+  testNiches.push({
+  name: String.fromCharCode(65 + i),
+  available: false,
+  header: true,
+  wall: 1,
+  row: 0, 
+  col: i + 1
+});
+}
+
+var titlePos = ((width - getTextWidth("Wall #1", "Arial 14pt"))/2);
+svg.append("text")
+   .attr("x",titlePos)
+   .attr("y","30")
+   .attr("font-family","Arial")
+   .attr("font-size","14")
+   .text("Wall #1");
+
+var niche = svg.append("g")
+    .attr("transform", "translate(" + width / 2 + "," + ((height / 2) - (cellSize / 2)) + ")")
+  .selectAll(".niche")
+    .data(testNiches)
+  .enter().append("g")
+    .attr("class", function(d) { return "niche" + (d.available ? " niche--available" : d.header ? " niche--header" : ""); })
+    .attr("transform", function(d) { return "translate(" + (d.col - gridWidth / 2) * cellSize + "," + (d.row - gridHeight / 2) * cellSize + ")"; });
+
+niche.append("rect")
+    .attr("x", -cellSize / 2)
+    .attr("y", -cellSize / 2)
+    .attr("width", cellSize - 1)
+    .attr("height", cellSize - 1);
+
+niche.append("text")
+    .attr("dy", ".35em")
+    .text(function(d) { return d.available ? '\uf14a' : d.header ? d.name : '\u2020'; });
+/*
+
+var legendPosH = ((width - getTextWidth("Legend", "Arial 14pt"))/2);
+var legendPosV = (height - (1.5*cellSize));
+svg.append("text")
+   .attr("x",legendPosH)
+   .attr("y",legendPosV)
+   .attr("font-family","Arial")
+   .attr("font-size","14")
+   .text("Legend");
+
+var legend = svg.append("g")
+   .attr("transform", "translate(" + cellSize + "," + (height-cellSize) + ")");
+
+var b = legend.append("g")
+    .attr("class", "niche niche--available")
+    .attr("transform","translate(" +  + "," + (height - 50) + ")")
+    .append("rect")
+    .attr("x", -cellSize / 2)
+    .attr("y", -cellSize / 2)
+    .attr("width", cellSize - 1)
+    .attr("height", cellSize - 1);
+
+b.append("text")
+    .attr("dy", ".35em")
+    .text("\uf14a");
+   
+var legend = svg.append("g")
+    .attr("class", "niche--available")
+    .attr("transform","translate(" + width / 2 + "," + (height - 50) + ")");
+
+    legend.append("rect")
+    .attr("x", -cellSize/2)
+    .attr("y", -cellSize/2)
+    .attr("width", cellSize - 1)
+    .attr("height", cellSize - 1);
+var wall2 = d3.select("#wall2");
+wall2.append("use").attr("xlink:href","#wall1");
+*/
+
+/*
+ - dynamic svg height/width
+ - legend
+
+*/
+
+
+</script>
+</body>
+</html>
