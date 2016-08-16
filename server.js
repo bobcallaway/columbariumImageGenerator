@@ -1,5 +1,7 @@
 'use strict';
 
+var fs = require('fs');
+var _ = require('underscore');
 var path = require('path');
 var childProcess = require('child_process');
 var phantomJsPath = require('phantomjs-prebuilt').path;
@@ -25,10 +27,10 @@ exports.generateImage = function(data, callback) {
     if (err) 
       return callback(true, err);
     else {
-      /*
-      - TODO: generate SVG from input JSON
-      */
-      // data
+      var cbHTML = fs.readFileSync('cb.html');
+      var cbTemplate = _.template(cbHTML.toString());
+      var svgInput = cbTemplate({niches: JSON.stringify(data)});
+      fs.writeFileSync(srcPath, svgInput);
 
       var childArgs = [path.join(__dirname, 'phantomjs-script.js')];
       var phantom = childProcess.execFile(phantomJsPath, childArgs, { 

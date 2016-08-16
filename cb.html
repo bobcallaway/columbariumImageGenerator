@@ -33,8 +33,8 @@
 </style>
 </head>
 <body>
-<!-- dynamically add svg element per wall; use underscore template to write out JSON.stringify() of input data, use html file as template -->
-<svg id="wall1"></svg>
+<!-- dynamically add svg element per wall 
+<svg id="wall1"></svg>-->
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 function getTextWidth(text, font) {
@@ -46,7 +46,9 @@ function getTextWidth(text, font) {
   var metrics = context.measureText(text);
   return metrics.width;
 };
-var testNiches = [
+var testNiches = <%= niches %>;
+/*
+[
 {
   name: "1x1",
   available: false,
@@ -112,18 +114,23 @@ var testNiches = [
   col: 3
 },
 ];
+*/
 
-var svg = d3.select("#wall1");
+for (var i = 1; i <= testNiches.numOfWalls; i++){
+  var svg = d3.select("body").append("svg")
 
-var gridWidth = d3.max(testNiches, function(d) { return d.col; }),
-    gridHeight = d3.max(testNiches, function(d) { return d.row; }),
-    cellSize = 45;
+  svg.attr("id","wall" + i);
 
-var width = (gridWidth + 2)*cellSize;
-var height = (gridHeight + 4)*cellSize;
-svg.attr("width",width);
-svg.attr("height",height);
+  var gridWidth = d3.max(testNiches.niches, function(d) { if (d.wall == i) return d.col; else return -1;}),
+     gridHeight = d3.max(testNiches.niches, function(d) { if (d.wall == u) return d.row; else return -1;}),
+       cellSize = 45;
 
+  var width = (gridWidth + 2)*cellSize;
+  var height = (gridHeight + 4)*cellSize;
+  svg.attr("width",width);
+  svg.attr("height",height);
+
+/*
 for (var i = 0; i < gridHeight; i++){
   testNiches.push({
   name: 1 + i,
@@ -144,19 +151,21 @@ for (var i = 0; i < gridWidth; i++){
   col: i + 1
 });
 }
+*/
 
-var titlePos = ((width - getTextWidth("Wall #1", "Arial 14pt"))/2);
+  var titlePos = ((width - getTextWidth("Wall #"+i, "Arial 14pt"))/2);
 svg.append("text")
    .attr("x",titlePos)
    .attr("y","30")
    .attr("font-family","Arial")
    .attr("font-size","14")
-   .text("Wall #1");
+   .text("Wall #"+i);
 
 var niche = svg.append("g")
     .attr("transform", "translate(" + width / 2 + "," + ((height / 2) - (cellSize / 2)) + ")")
   .selectAll(".niche")
-    .data(testNiches)
+    .data(testNiches.niches)
+  .filter(function(d) { return d.wall == i; })
   .enter().append("g")
     .attr("class", function(d) { return "niche" + (d.available ? " niche--available" : d.header ? " niche--header" : ""); })
     .attr("transform", function(d) { return "translate(" + (d.col - gridWidth / 2) * cellSize + "," + (d.row - gridHeight / 2) * cellSize + ")"; });
@@ -209,14 +218,6 @@ var legend = svg.append("g")
 var wall2 = d3.select("#wall2");
 wall2.append("use").attr("xlink:href","#wall1");
 */
-
-/*
- - dynamic svg height/width
- - legend
-
-*/
-
-
 </script>
 </body>
 </html>
