@@ -1,0 +1,565 @@
+{
+  "numOfWalls": 2,
+  "niches": [
+    {
+      "name": "A1",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 1,
+      "column": 1
+    },
+    {
+      "name": "A2",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 2,
+      "column": 1
+    },
+    {
+      "name": "A3",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 3,
+      "column": 1
+    },
+    {
+      "name": "A4",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 4,
+      "column": 1
+    },
+    {
+      "name": "A5",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 5,
+      "column": 1
+    },
+    {
+      "name": "A6",
+      "available": false,
+      "header": false,
+      "wall": 1,
+      "row": 6,
+      "column": 1
+    },
+    {
+      "name": "B1",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 1,
+      "column": 2
+    },
+    {
+      "name": "B2",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 2,
+      "column": 2
+    },
+    {
+      "name": "B3",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 3,
+      "column": 2
+    },
+    {
+      "name": "B4",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 4,
+      "column": 2
+    },
+    {
+      "name": "B5",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 5,
+      "column": 2
+    },
+    {
+      "name": "B6",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 6,
+      "column": 2
+    },
+    {
+      "name": "C1",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 1,
+      "column": 3
+    },
+    {
+      "name": "C2",
+      "available": false,
+      "header": false,
+      "wall": 1,
+      "row": 2,
+      "column": 3
+    },
+    {
+      "name": "C3",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 3,
+      "column": 3
+    },
+    {
+      "name": "C4",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 4,
+      "column": 3
+    },
+    {
+      "name": "C5",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 5,
+      "column": 3
+    },
+    {
+      "name": "C6",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 6,
+      "column": 3
+    },
+    {
+      "name": "D1",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 1,
+      "column": 4
+    },
+    {
+      "name": "D2",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 2,
+      "column": 4
+    },
+    {
+      "name": "D3",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 3,
+      "column": 4
+    },
+    {
+      "name": "D4",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 4,
+      "column": 4
+    },
+    {
+      "name": "D5",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 5,
+      "column": 4
+    },
+    {
+      "name": "D6",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 6,
+      "column": 4
+    },
+    {
+      "name": "E1",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 1,
+      "column": 5
+    },
+    {
+      "name": "E2",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 2,
+      "column": 5
+    },
+    {
+      "name": "E3",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 3,
+      "column": 5
+    },
+    {
+      "name": "E4",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 4,
+      "column": 5
+    },
+    {
+      "name": "E5",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 5,
+      "column": 5
+    },
+    {
+      "name": "E6",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 6,
+      "column": 5
+    },
+    {
+      "name": "F1",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 1,
+      "column": 6
+    },
+    {
+      "name": "F2",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 2,
+      "column": 6
+    },
+    {
+      "name": "F3",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 3,
+      "column": 6
+    },
+    {
+      "name": "F4",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 4,
+      "column": 6
+    },
+    {
+      "name": "F5",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 5,
+      "column": 6
+    },
+    {
+      "name": "F6",
+      "available": true,
+      "header": false,
+      "wall": 1,
+      "row": 6,
+      "column": 6
+    },
+    {
+      "name": "A1",
+      "available": true,
+      "header": false,
+      "wall": 2,
+      "row": 1,
+      "column": 1
+    },
+    {
+      "name": "A2",
+      "available": true,
+      "header": false,
+      "wall": 2,
+      "row": 2,
+      "column": 1
+    },
+    {
+      "name": "A3",
+      "available": true,
+      "header": false,
+      "wall": 2,
+      "row": 3,
+      "column": 1
+    },
+    {
+      "name": "A4",
+      "available": true,
+      "header": false,
+      "wall": 2,
+      "row": 4,
+      "column": 1
+    },
+    {
+      "name": "B2",
+      "available": true,
+      "header": false,
+      "wall": 2,
+      "row": 2,
+      "column": 2
+    },
+    {
+      "name": "B3",
+      "available": true,
+      "header": false,
+      "wall": 2,
+      "row": 3,
+      "column": 2
+    },
+    {
+      "name": "B4",
+      "available": true,
+      "header": false,
+      "wall": 2,
+      "row": 4,
+      "column": 2
+    },
+    {
+      "name": "C2",
+      "available": true,
+      "header": false,
+      "wall": 2,
+      "row": 2,
+      "column": 3
+    },
+    {
+      "name": "C3",
+      "available": true,
+      "header": false,
+      "wall": 2,
+      "row": 3,
+      "column": 3
+    },
+    {
+      "name": "C4",
+      "available": true,
+      "header": false,
+      "wall": 2,
+      "row": 4,
+      "column": 3
+    },
+    {
+      "name": "D1",
+      "available": true,
+      "header": false,
+      "wall": 2,
+      "row": 1,
+      "column": 4
+    },
+    {
+      "name": "D2",
+      "available": true,
+      "header": false,
+      "wall": 2,
+      "row": 2,
+      "column": 4
+    },
+    {
+      "name": "D3",
+      "available": true,
+      "header": false,
+      "wall": 2,
+      "row": 3,
+      "column": 4
+    },
+    {
+      "name": "D4",
+      "available": true,
+      "header": false,
+      "wall": 2,
+      "row": 4,
+      "column": 4
+    },
+    {
+      "name": "1",
+      "available": false,
+      "header": true,
+      "wall": "1",
+      "row": "1",
+      "column": 0
+    },
+    {
+      "name": "2",
+      "available": false,
+      "header": true,
+      "wall": "1",
+      "row": "2",
+      "column": 0
+    },
+    {
+      "name": "3",
+      "available": false,
+      "header": true,
+      "wall": "1",
+      "row": "3",
+      "column": 0
+    },
+    {
+      "name": "4",
+      "available": false,
+      "header": true,
+      "wall": "1",
+      "row": "4",
+      "column": 0
+    },
+    {
+      "name": "5",
+      "available": false,
+      "header": true,
+      "wall": "1",
+      "row": "5",
+      "column": 0
+    },
+    {
+      "name": "6",
+      "available": false,
+      "header": true,
+      "wall": "1",
+      "row": "6",
+      "column": 0
+    },
+    {
+      "name": "A",
+      "available": false,
+      "header": true,
+      "wall": "1",
+      "row": 0,
+      "column": "1"
+    },
+    {
+      "name": "B",
+      "available": false,
+      "header": true,
+      "wall": "1",
+      "row": 0,
+      "column": "2"
+    },
+    {
+      "name": "C",
+      "available": false,
+      "header": true,
+      "wall": "1",
+      "row": 0,
+      "column": "3"
+    },
+    {
+      "name": "D",
+      "available": false,
+      "header": true,
+      "wall": "1",
+      "row": 0,
+      "column": "4"
+    },
+    {
+      "name": "E",
+      "available": false,
+      "header": true,
+      "wall": "1",
+      "row": 0,
+      "column": "5"
+    },
+    {
+      "name": "F",
+      "available": false,
+      "header": true,
+      "wall": "1",
+      "row": 0,
+      "column": "6"
+    },
+    {
+      "name": "1",
+      "available": false,
+      "header": true,
+      "wall": "2",
+      "row": "1",
+      "column": 0
+    },
+    {
+      "name": "2",
+      "available": false,
+      "header": true,
+      "wall": "2",
+      "row": "2",
+      "column": 0
+    },
+    {
+      "name": "3",
+      "available": false,
+      "header": true,
+      "wall": "2",
+      "row": "3",
+      "column": 0
+    },
+    {
+      "name": "4",
+      "available": false,
+      "header": true,
+      "wall": "2",
+      "row": "4",
+      "column": 0
+    },
+    {
+      "name": "A",
+      "available": false,
+      "header": true,
+      "wall": "2",
+      "row": 0,
+      "column": "1"
+    },
+    {
+      "name": "B",
+      "available": false,
+      "header": true,
+      "wall": "2",
+      "row": 0,
+      "column": "2"
+    },
+    {
+      "name": "C",
+      "available": false,
+      "header": true,
+      "wall": "2",
+      "row": 0,
+      "column": "3"
+    },
+    {
+      "name": "D",
+      "available": false,
+      "header": true,
+      "wall": "2",
+      "row": 0,
+      "column": "4"
+    }
+  ]
+}

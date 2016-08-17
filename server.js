@@ -8,8 +8,8 @@ var phantomJsPath = require('phantomjs-prebuilt').path;
 var mktemp = require('mktemp');
 
 exports.handler = function (event, context, callback) { 
-  if (event.data) { 
-    generateImage(event.data, function(err, result) {
+  if (event) { 
+    generateImage(event, function(err, result) {
       if (err) {
         return callback(null, {error: result});
       }
@@ -21,9 +21,9 @@ exports.handler = function (event, context, callback) {
   }
 };
 
-exports.generateImage = function(data, callback) {
+function generateImage(data, callback) {
 
-  var imageOutputFile = mktemp.createFile("XXXXX.html", function (err, srcPath){
+  var imageOutputFile = mktemp.createFile("/tmp/XXXXX.html", function (err, srcPath){
     if (err) 
       return callback(true, err);
     else {
@@ -62,5 +62,5 @@ exports.generateImage = function(data, callback) {
         callback(null, new Buffer(stdout).toString('base64'));
       });
     }
-  };
+  });
 };

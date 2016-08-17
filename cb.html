@@ -117,12 +117,12 @@ var testNiches = <%= niches %>;
 */
 
 for (var i = 1; i <= testNiches.numOfWalls; i++){
-  var svg = d3.select("body").append("svg")
+  var svg = d3.select("body").append("p").append("svg");
 
   svg.attr("id","wall" + i);
 
-  var gridWidth = d3.max(testNiches.niches, function(d) { if (d.wall == i) return d.col; else return -1;}),
-     gridHeight = d3.max(testNiches.niches, function(d) { if (d.wall == u) return d.row; else return -1;}),
+  var gridWidth = d3.max(testNiches.niches, function(d) { if (d.wall == i) return d.column; else return -1;}),
+     gridHeight = d3.max(testNiches.niches, function(d) { if (d.wall == i) return d.row; else return -1;}),
        cellSize = 45;
 
   var width = (gridWidth + 2)*cellSize;
@@ -165,10 +165,10 @@ var niche = svg.append("g")
     .attr("transform", "translate(" + width / 2 + "," + ((height / 2) - (cellSize / 2)) + ")")
   .selectAll(".niche")
     .data(testNiches.niches)
-  .filter(function(d) { return d.wall == i; })
   .enter().append("g")
+  .filter(function(d) { return d.wall == i; })
     .attr("class", function(d) { return "niche" + (d.available ? " niche--available" : d.header ? " niche--header" : ""); })
-    .attr("transform", function(d) { return "translate(" + (d.col - gridWidth / 2) * cellSize + "," + (d.row - gridHeight / 2) * cellSize + ")"; });
+    .attr("transform", function(d) { return "translate(" + (d.column - gridWidth / 2) * cellSize + "," + (d.row - gridHeight / 2) * cellSize + ")"; });
 
 niche.append("rect")
     .attr("x", -cellSize / 2)
@@ -179,6 +179,7 @@ niche.append("rect")
 niche.append("text")
     .attr("dy", ".35em")
     .text(function(d) { return d.available ? '\uf14a' : d.header ? d.name : '\u2020'; });
+}
 /*
 
 var legendPosH = ((width - getTextWidth("Legend", "Arial 14pt"))/2);

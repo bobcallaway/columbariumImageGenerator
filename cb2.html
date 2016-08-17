@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<meta charset="utf-8">
+<style>
+
+.niche rect {
+  fill: #dedede;
+}
+
+.niche text {
+  fill: #575555;
+  font-family: Arial;
+  text-anchor: middle;
+}
+
+.niche--available rect {
+  fill: #9f4a6c;
+}
+
+.niche--available text {
+  font-family: "FontAwesome";
+  fill: white;
+}
+
+.niche--header rect {
+  fill: #ffffff;
+}
+
+.niche--header text {
+  fill: #575555;
+}
+</style>
+</head>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+function getTextWidth(text, font) {
+  // if given, use cached canvas for better performance
+  // else, create new canvas
+  var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+  var context = canvas.getContext("2d");
+  context.font = font;
+  var metrics = context.measureText(text);
+  return metrics.width;
+};
+var testNiches = {"numOfWalls":2,"niches":[{"name":"A1","available":true,"header":false,"wall":1,"row":1,"column":1},{"name":"A2","available":true,"header":false,"wall":1,"row":2,"column":1},{"name":"A3","available":true,"header":false,"wall":1,"row":3,"column":1},{"name":"A4","available":true,"header":false,"wall":1,"row":4,"column":1},{"name":"A5","available":true,"header":false,"wall":1,"row":5,"column":1},{"name":"A6","available":false,"header":false,"wall":1,"row":6,"column":1},{"name":"B1","available":true,"header":false,"wall":1,"row":1,"column":2},{"name":"B2","available":true,"header":false,"wall":1,"row":2,"column":2},{"name":"B3","available":true,"header":false,"wall":1,"row":3,"column":2},{"name":"B4","available":true,"header":false,"wall":1,"row":4,"column":2},{"name":"B5","available":true,"header":false,"wall":1,"row":5,"column":2},{"name":"B6","available":true,"header":false,"wall":1,"row":6,"column":2},{"name":"C1","available":true,"header":false,"wall":1,"row":1,"column":3},{"name":"C2","available":false,"header":false,"wall":1,"row":2,"column":3},{"name":"C3","available":true,"header":false,"wall":1,"row":3,"column":3},{"name":"C4","available":true,"header":false,"wall":1,"row":4,"column":3},{"name":"C5","available":true,"header":false,"wall":1,"row":5,"column":3},{"name":"C6","available":true,"header":false,"wall":1,"row":6,"column":3},{"name":"D1","available":true,"header":false,"wall":1,"row":1,"column":4},{"name":"D2","available":true,"header":false,"wall":1,"row":2,"column":4},{"name":"D3","available":true,"header":false,"wall":1,"row":3,"column":4},{"name":"D4","available":true,"header":false,"wall":1,"row":4,"column":4},{"name":"D5","available":true,"header":false,"wall":1,"row":5,"column":4},{"name":"D6","available":true,"header":false,"wall":1,"row":6,"column":4},{"name":"E1","available":true,"header":false,"wall":1,"row":1,"column":5},{"name":"E2","available":true,"header":false,"wall":1,"row":2,"column":5},{"name":"E3","available":true,"header":false,"wall":1,"row":3,"column":5},{"name":"E4","available":true,"header":false,"wall":1,"row":4,"column":5},{"name":"E5","available":true,"header":false,"wall":1,"row":5,"column":5},{"name":"E6","available":true,"header":false,"wall":1,"row":6,"column":5},{"name":"F1","available":true,"header":false,"wall":1,"row":1,"column":6},{"name":"F2","available":true,"header":false,"wall":1,"row":2,"column":6},{"name":"F3","available":true,"header":false,"wall":1,"row":3,"column":6},{"name":"F4","available":true,"header":false,"wall":1,"row":4,"column":6},{"name":"F5","available":true,"header":false,"wall":1,"row":5,"column":6},{"name":"F6","available":true,"header":false,"wall":1,"row":6,"column":6},{"name":"A1","available":true,"header":false,"wall":2,"row":1,"column":1},{"name":"A2","available":true,"header":false,"wall":2,"row":2,"column":1},{"name":"A3","available":true,"header":false,"wall":2,"row":3,"column":1},{"name":"A4","available":true,"header":false,"wall":2,"row":4,"column":1},{"name":"B2","available":true,"header":false,"wall":2,"row":2,"column":2},{"name":"B3","available":true,"header":false,"wall":2,"row":3,"column":2},{"name":"B4","available":true,"header":false,"wall":2,"row":4,"column":2},{"name":"C2","available":true,"header":false,"wall":2,"row":2,"column":3},{"name":"C3","available":true,"header":false,"wall":2,"row":3,"column":3},{"name":"C4","available":true,"header":false,"wall":2,"row":4,"column":3},{"name":"D1","available":true,"header":false,"wall":2,"row":1,"column":4},{"name":"D2","available":true,"header":false,"wall":2,"row":2,"column":4},{"name":"D3","available":true,"header":false,"wall":2,"row":3,"column":4},{"name":"D4","available":true,"header":false,"wall":2,"row":4,"column":4},{"name":"1","available":false,"header":true,"wall":"1","row":"1","column":0},{"name":"2","available":false,"header":true,"wall":"1","row":"2","column":0},{"name":"3","available":false,"header":true,"wall":"1","row":"3","column":0},{"name":"4","available":false,"header":true,"wall":"1","row":"4","column":0},{"name":"5","available":false,"header":true,"wall":"1","row":"5","column":0},{"name":"6","available":false,"header":true,"wall":"1","row":"6","column":0},{"name":"A","available":false,"header":true,"wall":"1","row":0,"column":"1"},{"name":"B","available":false,"header":true,"wall":"1","row":0,"column":"2"},{"name":"C","available":false,"header":true,"wall":"1","row":0,"column":"3"},{"name":"D","available":false,"header":true,"wall":"1","row":0,"column":"4"},{"name":"E","available":false,"header":true,"wall":"1","row":0,"column":"5"},{"name":"F","available":false,"header":true,"wall":"1","row":0,"column":"6"},{"name":"1","available":false,"header":true,"wall":"2","row":"1","column":0},{"name":"2","available":false,"header":true,"wall":"2","row":"2","column":0},{"name":"3","available":false,"header":true,"wall":"2","row":"3","column":0},{"name":"4","available":false,"header":true,"wall":"2","row":"4","column":0},{"name":"A","available":false,"header":true,"wall":"2","row":0,"column":"1"},{"name":"B","available":false,"header":true,"wall":"2","row":0,"column":"2"},{"name":"C","available":false,"header":true,"wall":"2","row":0,"column":"3"},{"name":"D","available":false,"header":true,"wall":"2","row":0,"column":"4"}]};
+
+for (var i = 1; i <= testNiches.numOfWalls; i++){
+  var svg = d3.select("body").append("p").append("svg");
+
+  svg.attr("id","wall" + i);
+
+  var gridWidth = d3.max(testNiches.niches, function(d) { if (d.wall == i) return d.column; else return -1;}),
+     gridHeight = d3.max(testNiches.niches, function(d) { if (d.wall == i) return d.row; else return -1;}),
+       cellSize = 45;
+
+  var width = (gridWidth + 2)*cellSize;
+  var height = (gridHeight + 4)*cellSize;
+  svg.attr("width",width);
+  svg.attr("height",height);
+
+  var titlePos = ((width - getTextWidth("Wall #"+i, "Arial 14pt"))/2);
+svg.append("text")
+   .attr("x",titlePos)
+   .attr("y","30")
+   .attr("font-family","Arial")
+   .attr("font-size","14")
+   .text("Wall #"+i);
+
+var niche = svg.append("g")
+    .attr("transform", "translate(" + width / 2 + "," + ((height / 2) - (cellSize / 2)) + ")")
+  .selectAll(".niche")
+    .data(testNiches.niches)
+  .enter().append("g")
+  .filter(function(d) { return d.wall == i; })
+    .attr("class", function(d) { return "niche" + (d.available ? " niche--available" : d.header ? " niche--header" : ""); })
+    .attr("transform", function(d) { return "translate(" + (d.column - gridWidth / 2) * cellSize + "," + (d.row - gridHeight / 2) * cellSize + ")"; });
+
+niche.append("rect")
+    .attr("x", -cellSize / 2)
+    .attr("y", -cellSize / 2)
+    .attr("width", cellSize - 1)
+    .attr("height", cellSize - 1);
+
+niche.append("text")
+    .attr("dy", ".35em")
+    .text(function(d) { return d.available ? '\uf14a' : d.header ? d.name : '\u2020'; });
+}
+</script>
+</body>
+</html>

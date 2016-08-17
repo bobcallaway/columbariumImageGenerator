@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ColumbariumImageModel",
+  "type": "object",
+  "properties": {
+    "numOfWalls": { "type": "integer" },
+    "niches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "available": { "type": "boolean" },
+          "header": { "type": "boolean" },
+          "wall": { "type": "integer" },
+          "row": { "type": "integer" },
+          "column": { "type": "integer" }
+        }
+      }
+    }
+  }
+}
