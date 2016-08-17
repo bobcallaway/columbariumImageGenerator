@@ -32,7 +32,7 @@ function generateImage(data, callback) {
       var svgInput = cbTemplate({niches: JSON.stringify(data)});
       fs.writeFileSync(srcPath, svgInput);
 
-      var childArgs = [path.join(__dirname, 'phantomjs-script.js')];
+      var childArgs = [path.join(__dirname, 'rasterize.js'), srcPath, '/dev/stdout'];
       var phantom = childProcess.execFile(phantomJsPath, childArgs, { 
         env: {
           URL: srcPath
@@ -59,7 +59,8 @@ function generateImage(data, callback) {
         if (exitCode !== 0) {
           return callback(true, stderr);
         }
-        callback(null, new Buffer(stdout).toString('base64'));
+        //callback(null, new Buffer(stdout).toString('base64'));
+        callback(null, stdout);
       });
     }
   });
