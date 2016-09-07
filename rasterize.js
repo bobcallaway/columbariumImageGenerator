@@ -46,7 +46,8 @@ if (system.args.length < 3 || system.args.length > 5) {
        	    var width = page.evaluate(function(){
 		return document.getElementById('svg').offsetWidth;
 		}); 
-  	    page.clipRect = { top: 0, left: 0, width: width, height: height };
+            page.viewportSize = { width: width, height: height };
+  	    //page.clipRect = { top: 0, left: 0, width: width, height: height };
             window.setTimeout(function () {
                 //page.render(output, { format: 'png' });
                 system.stdout.write(page.renderBase64());
