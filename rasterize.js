@@ -40,14 +40,6 @@ if (system.args.length < 3 || system.args.length > 5) {
             console.log('Unable to load the address!');
             phantom.exit(1);
         } else {
-	    var height = page.evaluate(function(){
-		return document.getElementById('svg').offsetHeight;
-		}); 
-       	    var width = page.evaluate(function(){
-		return document.getElementById('svg').offsetWidth;
-		}); 
-            page.viewportSize = { width: width, height: height };
-  	    //page.clipRect = { top: 0, left: 0, width: width, height: height };
             window.setTimeout(function () {
                 //page.render(output, { format: 'png' });
                 system.stdout.write(page.renderBase64());
