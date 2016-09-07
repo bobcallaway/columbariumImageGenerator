@@ -47,178 +47,47 @@ function getTextWidth(text, font) {
   return metrics.width;
 };
 var testNiches = <%= niches %>;
-/*
-[
-{
-  name: "1x1",
-  available: false,
-  header: false,
-  wall: 1,
-  row: 1,
-  col: 1
-},
-{
-  name: "1x2",
-  available: true,
-  header: false,
-  wall: 1,
-  row: 1,
-  col: 2
-},
-{
-  name: "2x1",
-  available: true,
-  header: false,
-  wall: 1,
-  row: 2,
-  col: 1
-},
-{
-  name: "2x2",
-  available: false,
-  header: false,
-  wall: 1,
-  row: 2,
-  col: 2
-},
-{
-  name: "3x1",
-  available: true,
-  header: false,
-  wall: 1,
-  row: 3,
-  col: 1
-},
-{
-  name: "3x2",
-  available: false,
-  header: false,
-  wall: 1,
-  row: 3,
-  col: 2
-},
-{
-  name: "4x1",
-  available: false,
-  header: false,
-  wall: 1,
-  row: 1,
-  col: 3
-},
-{
-  name: "3x3",
-  available: true,
-  header: false,
-  wall: 1,
-  row: 3,
-  col: 3
-},
-];
-*/
 
-for (var i = 1; i <= testNiches.numOfWalls; i++){
-  var svg = d3.select("body").append("p").append("svg");
+var svg = d3.select("body").append("p").append("svg");
 
-  svg.attr("id","wall" + i);
+svg.attr("id","wall" + testNiches.wallNumber);
 
-  var gridWidth = d3.max(testNiches.niches, function(d) { if (d.wall == i) return d.column; else return -1;}),
-     gridHeight = d3.max(testNiches.niches, function(d) { if (d.wall == i) return d.row; else return -1;}),
-       cellSize = 45;
+var gridWidth = d3.max(testNiches.niches, function(d) { return d.column;}),
+    gridHeight = d3.max(testNiches.niches, function(d) { return d.row;}),
+    cellSize = 45;
 
-  var width = (gridWidth + 2)*cellSize;
-  var height = (gridHeight + 4)*cellSize;
-  svg.attr("width",width);
-  svg.attr("height",height);
+var width = (gridWidth + 2)*cellSize;
+var height = (gridHeight + 4)*cellSize;
+svg.attr("width",width);
+svg.attr("height",height);
 
-/*
-for (var i = 0; i < gridHeight; i++){
-  testNiches.push({
-  name: 1 + i,
-  available: false,
-  header: true,
-  wall: 1,
-  row: i + 1,
-  col: 0
-});
-}
-for (var i = 0; i < gridWidth; i++){
-  testNiches.push({
-  name: String.fromCharCode(65 + i),
-  available: false,
-  header: true,
-  wall: 1,
-  row: 0, 
-  col: i + 1
-});
-}
-*/
-
-  var titlePos = ((width - getTextWidth("Wall #"+i, "Arial 14pt"))/2);
+var titlePos = ((width - getTextWidth("Wall #"+testNiches.wallNumber, "Arial 14pt"))/2);
 svg.append("text")
    .attr("x",titlePos)
    .attr("y","30")
    .attr("font-family","Arial")
    .attr("font-size","14")
-   .text("Wall #"+i);
+   .text("Wall #"+testNiches.wallNumber);
 
 var niche = svg.append("g")
-    .attr("transform", "translate(" + width / 2 + "," + ((height / 2) - (cellSize / 2)) + ")")
-  .selectAll(".niche")
-    .data(testNiches.niches)
-  .enter().append("g")
-  .filter(function(d) { return d.wall == i; })
-    .attr("class", function(d) { return "niche" + (d.available ? " niche--available" : d.header ? " niche--header" : ""); })
-    .attr("transform", function(d) { return "translate(" + (d.column - gridWidth / 2) * cellSize + "," + (d.row - gridHeight / 2) * cellSize + ")"; });
+               .attr("transform", "translate(" + width / 2 + "," + ((height / 2) - (cellSize / 2)) + ")")
+               .selectAll(".niche")
+               .data(testNiches.niches)
+               .enter().append("g")
+               .filter(function(d) { return d.wall == testNiches.wallNumber; })
+               .attr("class", function(d) { return "niche" + (d.available ? " niche--available" : d.header ? " niche--header" : ""); })
+               .attr("transform", function(d) { return "translate(" + (d.column - gridWidth / 2) * cellSize + "," + (d.row - gridHeight / 2) * cellSize + ")"; });
 
 niche.append("rect")
-    .attr("x", -cellSize / 2)
-    .attr("y", -cellSize / 2)
-    .attr("width", cellSize - 1)
-    .attr("height", cellSize - 1);
+     .attr("x", -cellSize / 2)
+     .attr("y", -cellSize / 2)
+     .attr("width", cellSize - 1)
+     .attr("height", cellSize - 1);
 
 niche.append("text")
-    .attr("dy", ".35em")
-    .text(function(d) { return d.available ? '\uf14a' : d.header ? d.name : '\u2020'; });
-}
-/*
+     .attr("dy", ".35em")
+     .text(function(d) { return d.available ? '\uf14a' : d.header ? d.name : '\u2020'; });
 
-var legendPosH = ((width - getTextWidth("Legend", "Arial 14pt"))/2);
-var legendPosV = (height - (1.5*cellSize));
-svg.append("text")
-   .attr("x",legendPosH)
-   .attr("y",legendPosV)
-   .attr("font-family","Arial")
-   .attr("font-size","14")
-   .text("Legend");
-
-var legend = svg.append("g")
-   .attr("transform", "translate(" + cellSize + "," + (height-cellSize) + ")");
-
-var b = legend.append("g")
-    .attr("class", "niche niche--available")
-    .attr("transform","translate(" +  + "," + (height - 50) + ")")
-    .append("rect")
-    .attr("x", -cellSize / 2)
-    .attr("y", -cellSize / 2)
-    .attr("width", cellSize - 1)
-    .attr("height", cellSize - 1);
-
-b.append("text")
-    .attr("dy", ".35em")
-    .text("\uf14a");
-   
-var legend = svg.append("g")
-    .attr("class", "niche--available")
-    .attr("transform","translate(" + width / 2 + "," + (height - 50) + ")");
-
-    legend.append("rect")
-    .attr("x", -cellSize/2)
-    .attr("y", -cellSize/2)
-    .attr("width", cellSize - 1)
-    .attr("height", cellSize - 1);
-var wall2 = d3.select("#wall2");
-wall2.append("use").attr("xlink:href","#wall1");
-*/
 </script>
 </body>
 </html>
