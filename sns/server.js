@@ -25,14 +25,14 @@ function sendSMS(event, callback) {
       PhoneNumber: phone,
       Message: event.message, 
       Subject: (urgent?"URGENT ":"") + "StMM Columbarium:",
-      AWS.SNS.SMS.SenderID: "StMM",
-      AWS.SNS.SMS.SMSType: "Transactional"
+      "AWS.SNS.SMS.SenderID": "StMM",
+      "AWS.SNS.SMS.SMSType": "Transactional"
     };
     sns.publish(params, function(err, data) {
       if (err) errors.push(err);
     }); 
   });
-  if (err.length) > 0){
+  if (err.length > 0){
     callback(true, errors);
   }
   else
