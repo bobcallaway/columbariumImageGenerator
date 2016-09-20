@@ -32,7 +32,7 @@ function sendSMS(event, callback) {
       if (err) errors.push(err);
     }); 
   });
-  if (err.length > 0){
+  if (errors.length > 0){
     callback(true, errors);
   }
   else
