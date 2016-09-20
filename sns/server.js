@@ -24,7 +24,7 @@ function sendSMS(event, callback) {
     var params = {
       PhoneNumber: phone,
       Message: event.message, 
-      Subject: (urgent?"URGENT ":"") + "StMM Columbarium:",
+      Subject: (event.urgent?"URGENT ":"") + "StMM Columbarium:",
       "AWS.SNS.SMS.SenderID": "StMM",
       "AWS.SNS.SMS.SMSType": "Transactional"
     };
