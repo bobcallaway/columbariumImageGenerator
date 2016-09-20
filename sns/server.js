@@ -19,6 +19,7 @@ function sendSMS(event, callback) {
   var sns = new AWS.SNS();
 
   var errors = [];
+  var messageIDs = [];
 
   _.each(event.phones, function(phone){
     var params = {
@@ -30,11 +31,12 @@ function sendSMS(event, callback) {
     };
     sns.publish(params, function(err, data) {
       if (err) errors.push(err);
+      else if (data) messageIDs.push(data);
     }); 
   });
   if (errors.length > 0){
     callback(true, errors);
   }
   else
-    callback(null, {success: true});
+    callback(null, {success: messageIDs});
 };
