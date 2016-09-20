@@ -1,0 +1,14 @@
+{
+  "name": "columbariumSNSNotifications",
+  "version": "1.0.0",
+  "description": "Generates SMS Notifications for StMM Columbarium",
+  "author": "Bob Callaway <bob.callaway@gmail.com>",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.6.3"
+    "underscore": "^1.8.3"
+  }
+}
