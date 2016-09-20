@@ -31,7 +31,7 @@ function sendSMS(event, callback) {
     };
     sns.publish(params, function(err, data) {
       if (err) errors.push(err);
-      else if (data) messageIDs.push(data);
+      else messageIDs.push(data);
     }); 
   });
   if (errors.length > 0){
