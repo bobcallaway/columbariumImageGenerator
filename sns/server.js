@@ -25,13 +25,12 @@ function sendSMS(event, callback) {
     var params = {
       PhoneNumber: phone,
       Message: event.message, 
-/*
       MessageAttributes : {
-        "AWS.SNS.SMS.SMSType": { DataType: "STRING_VALUE", StringValue: "Transactional"}
+        "AWS.SNS.SMS.SMSType": { DataType: "String", StringValue: "Transactional"}
       }
-*/
     };
     sns.publish(params, function(err, data) {
+      console.log(JSON.stringify(data));
       if (err) errors.push(err);
       else messageIDs.push(data);
     }); 
