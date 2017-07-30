@@ -23,10 +23,11 @@ exports.handler = function (event, context, callback) {
 };
 
 function putObjectToS3(bucket, key, data){
-    var s3 = new AWS.S3();
+    var s3 = new aws.S3();
         var params = {
             Bucket : bucket,
             Key : key,
+            ACL : "public-read",
             Body : data
         }
         s3.putObject(params, function(err, data) {
@@ -41,6 +42,7 @@ function generateImage(data, callback) {
       return callback(true, err);
     else {
       var wallNumber = data.wallNumber;
+      //TODO: validate wallNumber, and if data.niches fits schema
       var cbHTML = fs.readFileSync('cb.html');
       var cbTemplate = _.template(cbHTML.toString());
       var svgInput = cbTemplate({niches: JSON.stringify(data)});
@@ -75,7 +77,7 @@ function generateImage(data, callback) {
         }
         //callback(null, new Buffer(stdout).toString('base64'));
 	// base64 decode stdout to binary
-        var imageBytes = new Buffer(stdout, 'base64').toString();
+        var imageBytes = new Buffer(stdout, 'base64')
 	// upload into s3 bucket as wallX.png
 	var s3Error = putObjectToS3("columbariumimage","wallImages/wall" + wallNumber + ".png", imageBytes);
         if (s3Error) return callback(true, s3Error);
