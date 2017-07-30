@@ -1,5 +1,6 @@
 'use strict';
 
+var aws = require('aws-sdk');
 var fs = require('fs');
 var _ = require('underscore');
 var path = require('path');
@@ -21,12 +22,25 @@ exports.handler = function (event, context, callback) {
   }
 };
 
+function putObjectToS3(bucket, key, data){
+    var s3 = new AWS.S3();
+        var params = {
+            Bucket : bucket,
+            Key : key,
+            Body : data
+        }
+        s3.putObject(params, function(err, data) {
+          if (err) return err;
+        });
+}
+
 function generateImage(data, callback) {
 
   var imageOutputFile = mktemp.createFile("/tmp/XXXXX.html", function (err, srcPath){
     if (err) 
       return callback(true, err);
     else {
+      var wallNumber = data.wallNumber;
       var cbHTML = fs.readFileSync('cb.html');
       var cbTemplate = _.template(cbHTML.toString());
       var svgInput = cbTemplate({niches: JSON.stringify(data)});
@@ -60,7 +74,12 @@ function generateImage(data, callback) {
           return callback(true, stderr);
         }
         //callback(null, new Buffer(stdout).toString('base64'));
-        callback(null, stdout);
+	// base64 decode stdout to binary
+        var imageBytes = new Buffer(stdout, 'base64').toString();
+	// upload into s3 bucket as wallX.png
+	var s3Error = putObjectToS3("columbariumimage","wallImages/wall" + wallNumber + ".png", imageBytes);
+        if (s3Error) return callback(true, s3Error);
+        else callback(null, stdout);
       });
     }
   });
