@@ -1,88 +1,119 @@
-'use strict';
+const { S3 } = require('@aws-sdk/client-s3');
+const fs = require('fs');
+const _ = require('underscore');
+const puppeteer = require('puppeteer');
+const chromium = require("@sparticuz/chromium");
 
-var aws = require('aws-sdk');
-var fs = require('fs');
-var _ = require('underscore');
-var path = require('path');
-var childProcess = require('child_process');
-var phantomJsPath = require('phantomjs-prebuilt').path;
-var mktemp = require('mktemp');
-
-exports.handler = function (event, context, callback) { 
+exports.handler = function(event, context, callback) {
+  context.callbackWaitsForEmptyEventLoop = false;
   if (event) { 
     generateImage(event, function(err, result) {
       if (err) {
-        return callback(null, {error: result});
+        callback(null, {error: result});
       }
       callback(null, {image: result});
     });
   }
   else {
-    callback(null, {error: 'bad query'});
+    callback(null,{error: 'bad query'});
   }
+  return;
 };
 
 function putObjectToS3(bucket, key, data){
-    var s3 = new aws.S3();
-        var params = {
-            Bucket : bucket,
-            Key : key,
-            ACL : "public-read",
-            Body : data
-        }
-        s3.putObject(params, function(err, data) {
-          if (err) return err;
-        });
+  var s3 = new S3();
+  var params = {
+    Bucket : bucket,
+    Key : key,
+    ACL : "public-read",
+    Body : data
+  }
+  s3.putObject(params, function(err, data) {
+    if (err) return err;
+  });
 }
 
+const minimal_args = [
+  //'--autoplay-policy=user-gesture-required',
+  //'--disable-background-networking',
+  //'--disable-background-timer-throttling',
+  //'--disable-backgrounding-occluded-windows',
+  //'--disable-breakpad',
+  //'--disable-client-side-phishing-detection',
+  //'--disable-component-update',
+  //'--disable-default-apps',
+  //'--disable-dev-shm-usage',
+  //'--disable-domain-reliability',
+  '--disable-extensions',
+  //'--disable-features=AudioServiceOutOfProcess',
+  //'--disable-hang-monitor',
+  //'--disable-ipc-flooding-protection',
+  //'--disable-notifications',
+  //'--disable-offer-store-unmasked-wallet-cards',
+  //'--disable-popup-blocking',
+  //'--disable-print-preview',
+  //'--disable-prompt-on-repost',
+  //'--disable-renderer-backgrounding',
+  '--disable-setuid-sandbox',
+  //'--disable-speech-api',
+  //'--disable-sync',
+  //'--hide-scrollbars',
+  //'--ignore-gpu-blacklist',
+  //'--metrics-recording-only',
+  //'--mute-audio',
+  //'--no-default-browser-check',
+  //'--no-first-run',
+  //'--no-pings',
+  '--no-sandbox',
+  '--no-zygote',
+  //'--password-store=basic',
+  //'--use-gl=swiftshader',
+  //'--use-mock-keychain',
+  '--user-data-dir=/tmp',
+];
+
 function generateImage(data, callback) {
+  (async () => {
+    var wallNumber = data.wallNumber;
+    //TODO: validate wallNumber, and if data.niches fits schema
+    var cbHTML = fs.readFileSync('cb.html');
+    var cbTemplate = _.template(cbHTML.toString());
+    var svgInput = cbTemplate({niches: JSON.stringify(data)});
 
-  var imageOutputFile = mktemp.createFile("/tmp/XXXXX.html", function (err, srcPath){
-    if (err) 
-      return callback(true, err);
-    else {
-      var wallNumber = data.wallNumber;
-      //TODO: validate wallNumber, and if data.niches fits schema
-      var cbHTML = fs.readFileSync('cb.html');
-      var cbTemplate = _.template(cbHTML.toString());
-      var svgInput = cbTemplate({niches: JSON.stringify(data)});
-      fs.writeFileSync(srcPath, svgInput);
+    const browser = await puppeteer.launch({
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
+      ignoreHTTPSErrors: true,
+      defaultViewport: chromium.defaultViewport,
+      args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
+//      headless: 'shell',
+//      args: minimal_args,
+//      timeout: 0,
+//      userDataDir: '/tmp'
+    });
 
-      var childArgs = [path.join(__dirname, 'rasterize.js'), srcPath, '/dev/stdout'];
-      var phantom = childProcess.execFile(phantomJsPath, childArgs, { 
-        env: {
-          URL: srcPath
-        },
-        maxBuffer: 2048*1024
-      });
-    
-      var stdout = '';
-      var stderr = '';
-      
-      phantom.stdout.on('data', function(data) {
-        stdout += data;
-      });
-      
-      phantom.stderr.on('data', function(data) {
-        stderr += data;
-      });
-      
-      phantom.on('uncaughtException', function(err) {
-        console.log('uncaught exception: ' + err);
-      });
-      
-      phantom.on('exit', function(exitCode) {
-        if (exitCode !== 0) {
-          return callback(true, stderr);
-        }
-        //callback(null, new Buffer(stdout).toString('base64'));
-	// base64 decode stdout to binary
-        var imageBytes = new Buffer(stdout, 'base64')
-	// upload into s3 bucket as wallX.png
-	var s3Error = putObjectToS3("columbariumimage","wallImages/wall" + wallNumber + ".png", imageBytes);
-        if (s3Error) return callback(true, s3Error);
-        else callback(null, stdout);
-      });
+    const page = await browser.newPage();
+    await page.setContent(svgInput);
+    let imageBuffer = await page.screenshot({
+      type: 'png',
+      omitBackground: true,
+      clip: {
+        x: 0,
+        y: 0,
+        height: 531,
+        width: 600
+      }
+    });
+    for (const page of await browser.pages()) {
+      await page.close();
     }
-  });
-};
+    await browser.close();
+
+    var s3Error = putObjectToS3("columbariumimage","wallImages/wall" + wallNumber + ".png", imageBuffer);
+    if (s3Error) callback(true, s3Error);
+    else callback(null, imageBuffer.toString('base64'));
+    return;
+    })();
+
+    return;
+}

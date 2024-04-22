@@ -1,4 +1,4 @@
-var AWS = require('aws-sdk');
+const { SNS } = require("@aws-sdk/client-sns");
 var _ = require('underscore');
 
 exports.handler = function (event, context, callback) { 
@@ -16,7 +16,7 @@ exports.handler = function (event, context, callback) {
 };
 
 function sendSMS(event, callback) {
-  var sns = new AWS.SNS();
+  var sns = new SNS();
 
   var errors = [];
   var messageIDs = [];

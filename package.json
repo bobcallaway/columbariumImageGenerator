@@ -1,6 +1,6 @@
 {
   "name": "columbariumImageGenerator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Generates Image for use in Google Form for StMM Columbarium",
   "author": "Bob Callaway <bob.callaway@gmail.com>",
   "main": "server.js",
@@ -8,9 +8,9 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "aws-sdk": "^2.92.0",
-    "phantomjs-prebuilt": "^2.1.12",
-    "mktemp": "^0.4.0",
-    "underscore": "^1.8.3"
+    "@aws-sdk/client-s3": "^3.556.0",
+    "puppeteer": "^22.6.4",
+    "@sparticuz/chromium": "^123.0.1",
+    "underscore": "^1.13.6"
   }
 }
