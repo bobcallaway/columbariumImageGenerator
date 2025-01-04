@@ -10,6 +10,9 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+      - name: Install AWS Lambda RIE
+        run: |
+          mkdir -p ~/.aws-lambda-rie && curl -Lo ~/.aws-lambda-rie/aws-lambda-rie https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie && chmod +x ~/.aws-lambda-rie/aws-lambda-rie
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Setup Docker Cache
