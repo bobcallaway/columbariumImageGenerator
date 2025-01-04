@@ -6,7 +6,27 @@ jobs:
   gen_image:
     name: Generate Image
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          echo "payload: ${{ toJson(github.event.client_payload) }}"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          tags: docker-image:test
+          file: Dockerfile.old
+      - name: Run Lambda Function
+        run: docker run --platform linux/amd64 -d -v ~/.aws-lambda-rie:/aws-lambda -p 9000:8080 --entrypoint /aws-lambda/aws-lambda-rie docker-image:test /usr/local/bin/npx aws-lambda-ric server.handler
+      - name: Call the Lambda Function
+        run: |
+          curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '${{ toJson(github.event.client_payload) }}' | jq -r .image | base64 -d > /tmp/wall.jpg
+      - name: Commit the Updated image
+        run: |
+          mv /tmp/wall.jpg generated/wall${{ github.event.client_payload.wallNumber }.jpg
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -sam "updated image for wall ${{ github.event.client_payload.wallNumber }}"
+          git push
