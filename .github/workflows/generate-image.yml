@@ -19,7 +19,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ hashFiles('**','!**/generated/**') }}
+          key: ${{ runner.os }}-buildx-${{ hashFiles('Dockerfile.old','package.json','.puppeteerrc.cjs','server.js','cb.html') }}
       - name: Build Docker Image
         uses: docker/build-push-action@v6
         with:
