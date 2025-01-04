@@ -1,0 +1,12 @@
+name: Generate Wall Image
+
+on: repository_dispatch
+
+jobs:
+  gen_image:
+    name: Generate Image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          echo "payload: ${{ toJson(github.event.client_payload) }}"
