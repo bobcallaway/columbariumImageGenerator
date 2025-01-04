@@ -12,12 +12,19 @@ jobs:
       - uses: actions/checkout@v4
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+      - name: Setup Docker Cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ hashFiles('**/Dockerfile.old') }}
       - name: Build Docker Image
         uses: docker/build-push-action@v6
         with:
-          push: false
+          load: true
           tags: docker-image:test
           file: Dockerfile.old
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
       - name: Run Lambda Function
         run: docker run --platform linux/amd64 -d -v ~/.aws-lambda-rie:/aws-lambda -p 9000:8080 --entrypoint /aws-lambda/aws-lambda-rie docker-image:test /usr/local/bin/npx aws-lambda-ric server.handler
       - name: Call the Lambda Function
