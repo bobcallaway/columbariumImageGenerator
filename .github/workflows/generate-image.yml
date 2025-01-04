@@ -16,13 +16,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Setup Docker Cache
-        id: cache
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ hashFiles('Dockerfile.old','package.json','.puppeteerrc.cjs','server.js','cb.html') }}
       - name: Build Docker Image
-        if: steps.cache.outputs.cache-hit != 'true'
         uses: docker/build-push-action@v6
         with:
           load: true
