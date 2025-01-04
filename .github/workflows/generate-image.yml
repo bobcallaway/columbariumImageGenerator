@@ -19,7 +19,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ hashFiles('**/Dockerfile.old') }}
+          key: ${{ runner.os }}-buildx-${{ hashFiles('**','!generated/**') }}
       - name: Build Docker Image
         uses: docker/build-push-action@v6
         with:
@@ -27,7 +27,7 @@ jobs:
           tags: docker-image:test
           file: Dockerfile.old
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
       - name: Run Lambda Function
         run: docker run --platform linux/amd64 -d -v ~/.aws-lambda-rie:/aws-lambda -p 9000:8080 --entrypoint /aws-lambda/aws-lambda-rie docker-image:test /usr/local/bin/npx aws-lambda-ric server.handler
       - name: Call the Lambda Function
@@ -41,3 +41,7 @@ jobs:
           git add -A
           git commit -sam "updated image for wall ${{ github.event.client_payload.wallNumber }}"
           git push
+      - name: Move cache per Docker instructions
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
