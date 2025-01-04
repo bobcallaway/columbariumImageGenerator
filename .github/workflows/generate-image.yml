@@ -25,7 +25,7 @@ jobs:
           curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '${{ toJson(github.event.client_payload) }}' | jq -r .image | base64 -d > /tmp/wall.jpg
       - name: Commit the Updated image
         run: |
-          mv /tmp/wall.jpg generated/wall${{ github.event.client_payload.wallNumber }.jpg
+          mv /tmp/wall.jpg generated/wall${{ github.event.client_payload.wallNumber }}.jpg
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -sam "updated image for wall ${{ github.event.client_payload.wallNumber }}"
