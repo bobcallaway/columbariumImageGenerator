@@ -52,6 +52,7 @@ RUN mkdir /aws-lambda
 COPY --from=build-image /aws-lambda /aws-lambda
 
 RUN apk add --no-cache --update --repository=https://dl-cdn.alpinelinux.org/alpine/v3.16/main/ libexecinfo-dev
+RUN apk add --no-cache --update --repository=https://dl-cdn.alpinelinux.org/alpine/v3.21/community/ atk
 
 RUN apk add --no-cache \
     libstdc++ \
@@ -61,12 +62,10 @@ RUN apk add --no-cache \
     cairo \
     pango \
     glib \
-    atk \
     cups \
     dbus \
     nss \
     nspr \
-    curl-dev \
     ttf-freefont
 
 # Required for Node runtimes which use npm@8.6.0+ because
