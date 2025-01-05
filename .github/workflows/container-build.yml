@@ -54,7 +54,7 @@ jobs:
       - name: Build Docker Image
         uses: docker/build-push-action@v6
         with:
-          push: ${{ github.event == 'push' && 'true' || 'false' }}
+          push: ${{ github.event != 'pull_request' && 'true' || 'false' }}
           file: Dockerfile.old
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
