@@ -32,9 +32,8 @@ COPY . ${FUNCTION_DIR}
 RUN mkdir /aws-lambda && curl -Lo /aws-lambda/aws-lambda-rie https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie && chmod +x /aws-lambda/aws-lambda-rie
 
 # Grab a fresh slim copy of the image to reduce the final size
-FROM gcr.io/distroless/nodejs20-debian12:debug
+FROM node:20-buster-slim
 
-RUN mkdir /aws-lambda
 COPY --from=build-image /aws-lambda /aws-lambda
 
 RUN apt-get update && \
