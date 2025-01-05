@@ -19,6 +19,7 @@ on:
       - 'package.json'
       - 'server.js'
       - '.puppeteerrc.cjs'
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
