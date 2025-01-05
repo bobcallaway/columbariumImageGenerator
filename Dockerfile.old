@@ -24,7 +24,7 @@ RUN apk add --no-cache \
     gzip \
     krb5-dev \
     libc-dev \
-    libexecinfo-dev \
+    curl-dev \
     libgsasl-dev
 
 # Copy function code
@@ -61,7 +61,7 @@ RUN apk add --no-cache \
     dbus \
     nss \
     nspr \
-    libexecinfo-dev \
+    curl-dev \
     ttf-freefont
 
 # Required for Node runtimes which use npm@8.6.0+ because
