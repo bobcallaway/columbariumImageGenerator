@@ -32,6 +32,8 @@ COPY . ${FUNCTION_DIR}
 # Grab a fresh slim copy of the image to reduce the final size
 FROM node:20-buster-slim
 
+RUN mkdir /aws-lambda && curl -Lo /aws-lambda/aws-lambda-rie https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie && chmod +x /aws-lambda/aws-lambda-rie
+
 RUN apt-get update && \
     apt-get install -y libfontconfig libgtk2.0-0 libsm6 libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2  libcairo2 libpango-1.0-0 libglib2.0-0
 # Required for Node runtimes which use npm@8.6.0+ because
@@ -50,6 +52,6 @@ WORKDIR ${FUNCTION_DIR}
 COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
 
 # Set runtime interface client as default command for the container runtime
-ENTRYPOINT ["/usr/local/bin/npx", "aws-lambda-ric"]
+ENTRYPOINT ["/aws-lambda/aws-lambda-rie"]
 # Pass the name of the function handler as an argument to the runtime
-CMD ["server.handler"]
+CMD ["/usr/local/bin/npx", "aws-lambda-ric", "server.handler"]

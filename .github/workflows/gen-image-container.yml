@@ -1,0 +1,29 @@
+name: Generate Wall Image (Container)
+
+on:
+  repository_dispatch:
+
+jobs:
+  generate-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    services:
+      image: ${{ join('ghcr.io/', github.actor, '/', github.repository) }}
+      ports:
+        - 8080
+      options: --platform linux/amd64
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Call the Lambda Function
+        run: |
+          curl "http://localhost:8080/2015-03-31/functions/function/invocations" -d '${{ toJson(github.event.client_payload) }}' | jq -r .image | base64 -d > /tmp/wall.jpg
+      - name: Commit the Updated image
+        run: |
+          mv /tmp/wall.jpg generated/wall${{ github.event.client_payload.wallNumber }}.jpg
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -sam "updated image for wall ${{ github.event.client_payload.wallNumber }}" && git push || echo "nothing to commit"
