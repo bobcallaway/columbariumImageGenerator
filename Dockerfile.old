@@ -7,6 +7,8 @@ FROM node:20-alpine as build-image
 ARG FUNCTION_DIR
 
 # Install build dependencies
+RUN apk add --no-cache --update --repository=https://dl-cdn.alpinelinux.org/alpine/v3.16/main/ libexecinfo-dev
+
 RUN apk add --no-cache \
     g++ \
     make \
@@ -25,7 +27,6 @@ RUN apk add --no-cache \
     krb5-dev \
     libc-dev \
     curl-dev \
-    libbacktrace \
     libgsasl-dev
 
 # Copy function code
@@ -48,6 +49,8 @@ FROM node:20-alpine
 
 RUN mkdir /aws-lambda
 COPY --from=build-image /aws-lambda /aws-lambda
+
+RUN apk add --no-cache --update --repository=https://dl-cdn.alpinelinux.org/alpine/v3.16/main/ libexecinfo-dev
 
 RUN apk add --no-cache \
     libstdc++ \
