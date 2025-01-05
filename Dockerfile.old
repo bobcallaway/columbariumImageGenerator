@@ -27,7 +27,7 @@ RUN apk add --no-cache \
     krb5-dev \
     libc-dev \
     curl-dev \
-    python3-setuptools \
+    py3-setuptools \
     libgsasl-dev
 
 # Copy function code
