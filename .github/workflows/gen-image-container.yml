@@ -15,7 +15,7 @@ jobs:
         credentials:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-        image: ${{ format('ghcr.io/{0}/{1}:{2}', github.actor, github.repository, 'master') }}
+        image: ${{ format('ghcr.io/{0}:{1}', github.repository, 'master') }}
         ports:
           - 9000:8080
         options: --platform linux/amd64
