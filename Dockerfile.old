@@ -29,10 +29,13 @@ RUN npm install aws-lambda-ric
 
 COPY . ${FUNCTION_DIR}
 
+RUN mkdir /aws-lambda && curl -Lo /aws-lambda/aws-lambda-rie https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie && chmod +x /aws-lambda/aws-lambda-rie
+
 # Grab a fresh slim copy of the image to reduce the final size
 FROM node:20-buster-slim
 
-RUN mkdir /aws-lambda && curl -Lo /aws-lambda/aws-lambda-rie https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie && chmod +x /aws-lambda/aws-lambda-rie
+RUN mkdir /aws-lambda
+COPY --from=build-image /aws-lambda /aws-lambda
 
 RUN apt-get update && \
     apt-get install -y libfontconfig libgtk2.0-0 libsm6 libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2  libcairo2 libpango-1.0-0 libglib2.0-0
