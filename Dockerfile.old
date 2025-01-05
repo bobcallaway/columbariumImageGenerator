@@ -1,34 +1,19 @@
 # Define custom function directory
 ARG FUNCTION_DIR="/function"
 
-FROM node:20-alpine as build-image
+FROM node:20-buster as build-image
 
 # Include global arg in this stage of the build
 ARG FUNCTION_DIR
 
 # Install build dependencies
-RUN apk add --no-cache --update --repository=https://dl-cdn.alpinelinux.org/alpine/v3.16/main/ libexecinfo-dev
-
-RUN apk add --no-cache \
+RUN apt-get update && \
+    apt-get install -y \
     g++ \
     make \
     cmake \
     unzip \
-    curl \
-    python3 \
-    openssl-dev \
-    build-base \
-    autoconf \
-    automake \
-    libtool \
-    m4 \
-    tar \
-    gzip \
-    krb5-dev \
-    libc-dev \
-    curl-dev \
-    py3-setuptools \
-    libgsasl-dev
+    libcurl4-openssl-dev build-essential autoconf automake libtool m4 python3 libssl-dev tar gzip libkrb5-dev libexecs-dev libgsasl7
 
 # Copy function code
 RUN mkdir -p ${FUNCTION_DIR}
@@ -36,37 +21,24 @@ WORKDIR ${FUNCTION_DIR}
 
 # Install Node.js dependencies
 COPY package.json .puppeteerrc.cjs ${FUNCTION_DIR}
-RUN npm install --omit=dev && npx @puppeteer/browsers install chrome-headless-shell@stable
+RUN npm install && npx @puppeteer/browsers install chrome-headless-shell@stable
+
 
 # Install the runtime interface client
-RUN npm install --omit=dev aws-lambda-ric
+RUN npm install aws-lambda-ric
 
 COPY . ${FUNCTION_DIR}
 
 RUN mkdir /aws-lambda && curl -Lo /aws-lambda/aws-lambda-rie https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie && chmod +x /aws-lambda/aws-lambda-rie
 
 # Grab a fresh slim copy of the image to reduce the final size
-FROM node:20-alpine
+FROM gcr.io/distroless/nodejs20-debian12:latest
 
 RUN mkdir /aws-lambda
 COPY --from=build-image /aws-lambda /aws-lambda
 
-RUN apk add --no-cache --update --repository=https://dl-cdn.alpinelinux.org/alpine/v3.16/main/ libexecinfo-dev
-
-RUN apk add --no-cache \
-    libstdc++ \
-    fontconfig \
-    gtk+2.0 \
-    gdk-pixbuf \
-    cairo \
-    pango \
-    glib \
-    cups \
-    dbus \
-    nss \
-    nspr \
-    ttf-freefont
-
+RUN apt-get update && \
+    apt-get install -y libfontconfig libgtk2.0-0 libsm6 libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2  libcairo2 libpango-1.0-0 libglib2.0-0
 # Required for Node runtimes which use npm@8.6.0+ because
 # by default npm writes logs under /home/.npm and Lambda fs is read-only
 ENV NPM_CONFIG_CACHE=/tmp/.npm
