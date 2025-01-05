@@ -67,7 +67,6 @@ RUN apk add --no-cache \
     nss \
     nspr \
     curl-dev \
-    libbacktrace \
     ttf-freefont
 
 # Required for Node runtimes which use npm@8.6.0+ because
