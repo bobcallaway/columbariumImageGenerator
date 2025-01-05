@@ -36,7 +36,7 @@ WORKDIR ${FUNCTION_DIR}
 
 # Install Node.js dependencies
 COPY package.json .puppeteerrc.cjs ${FUNCTION_DIR}
-RUN npm install --omit=dev && npx @puppeteer/browsers install chrome-headless-shell@stable --no-sandbox
+RUN npm install --omit=dev && npx @puppeteer/browsers install chrome-headless-shell@stable
 
 # Install the runtime interface client
 RUN npm install --omit=dev aws-lambda-ric

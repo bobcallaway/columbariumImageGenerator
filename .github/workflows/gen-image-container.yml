@@ -21,11 +21,9 @@ jobs:
         options: --platform linux/amd64
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
       - name: Call the Lambda Function
         run: |
-          curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '${{ toJson(github.event.client_payload) }}' | jq -r .image | base64 -d > /tmp/wall.jpg
+          curl -f "http://localhost:9000/2015-03-31/functions/function/invocations" -d '${{ toJson(github.event.client_payload) }}' | jq -r .image | base64 -d > /tmp/wall.jpg
       - name: Commit the Updated image
         run: |
           mv /tmp/wall.jpg generated/wall${{ github.event.client_payload.wallNumber }}.jpg
