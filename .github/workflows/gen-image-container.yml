@@ -10,7 +10,7 @@ jobs:
     permissions:
       contents: write
     services:
-      image: ${{ join('ghcr.io/', github.actor, '/', github.repository, ':master') }}
+      image: ${{ join(['ghcr.io/', github.actor, '/', github.repository, ':master'],'') }}
       ports:
         - 8080
       options: --platform linux/amd64
