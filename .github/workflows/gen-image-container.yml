@@ -9,18 +9,23 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      packages: read
     services:
-      image: ${{ format('ghcr.io/{0}/{1}:{2}', github.actor, github.repository, 'master') }}
-      ports:
-        - 8080
-      options: --platform linux/amd64
+      lambda:
+        credentials:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+        image: ${{ format('ghcr.io/{0}/{1}:{2}', github.actor, github.repository, 'master') }}
+        ports:
+          - 9000:8080
+        options: --platform linux/amd64
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
       - name: Call the Lambda Function
         run: |
-          curl "http://localhost:8080/2015-03-31/functions/function/invocations" -d '${{ toJson(github.event.client_payload) }}' | jq -r .image | base64 -d > /tmp/wall.jpg
+          curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '${{ toJson(github.event.client_payload) }}' | jq -r .image | base64 -d > /tmp/wall.jpg
       - name: Commit the Updated image
         run: |
           mv /tmp/wall.jpg generated/wall${{ github.event.client_payload.wallNumber }}.jpg
