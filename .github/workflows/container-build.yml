@@ -1,0 +1,58 @@
+name: Update Container Image
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'Dockerfile.old'
+      - 'cb.html'
+      - 'package.json'
+      - 'server.js'
+      - '.puppeteerrc.cjs'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'Dockerfile.old'
+      - 'cb.html'
+      - 'package.json'
+      - 'server.js'
+      - '.puppeteerrc.cjs'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build_container:
+    name: Build Container
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          push: ${{ github.event == 'push' && 'true' || 'false' }}
+          file: Dockerfile.old
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
